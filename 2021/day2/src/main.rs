@@ -2,12 +2,16 @@ use std::fs;
 
 fn main() {
     let contents = fs::read_to_string("input.txt").expect("Something went wrong reading the file");
-    part_one(&contents);
-    part_bis(&contents);
+    let count = part_one(&contents);
+    println!("part1: {}", count);
+
+    let count = part_bis(&contents);
+    println!("part2: {}", count);
 }
 
-fn part_one(contents: &String) {
+fn part_one(contents: &str) -> usize {
     let lines: Vec<(&str, i32)> = contents
+        .trim()
         .lines()
         .filter(|line| !line.is_empty())
         .map(|line| {
@@ -34,13 +38,12 @@ fn part_one(contents: &String) {
             (_, _) => (),
         }
     }
-    dbg!(position.depth * position.horizontal);
-
-    ();
+    (position.depth * position.horizontal) as usize
 }
 
-fn part_bis(contents: &String) {
+fn part_bis(contents: &str) -> usize {
     let lines: Vec<(&str, i32)> = contents
+        .trim()
         .lines()
         .filter(|line| !line.is_empty())
         .map(|line| {
@@ -73,6 +76,29 @@ fn part_bis(contents: &String) {
         }
     }
 
-    dbg!(position.horizontal * position.depth);
-    ()
+    (position.horizontal * position.depth) as usize
+}
+
+#[cfg(test)]
+mod test {
+
+    use super::*;
+    const INPUT: &str = r"
+        forward 5
+        down 5
+        forward 8
+        up 3
+        down 8
+        forward 2
+    ";
+
+    #[test]
+    fn one() {
+        assert_eq!(part_one(INPUT), 150)
+    }
+
+    #[test]
+    fn two() {
+        assert_eq!(part_bis(INPUT), 900)
+    }
 }
